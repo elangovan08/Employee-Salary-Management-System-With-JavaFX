@@ -45,7 +45,9 @@ public class EmployeeSalaryGUI extends Application {
         launch(args);
     }
 
-    @Override
+   
+    @SuppressWarnings("unused")
+	@Override
     public void start(Stage stage) {
         stage.setTitle("Employee Salary System");
 
@@ -75,6 +77,7 @@ public class EmployeeSalaryGUI extends Application {
         Label extraLabel = new Label("Bonus:");
         extraField = new TextField();
 
+        // Create buttons
         calculateBtn = new Button("Calculate Salary");
         saveBtn = new Button("Save");
         searchBtn = new Button("Search by ID");
@@ -83,6 +86,27 @@ public class EmployeeSalaryGUI extends Application {
         resetBtn = new Button("Reset");
         showAllBtn = new Button("Show All");
         viewDatasetBtn = new Button("View Dataset");
+
+        // Set button sizes and styles
+        String buttonStyle = "-fx-background-color: #3a89ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px;";
+        String hoverStyle = "-fx-background-color: #2a79ef;";
+        
+        calculateBtn.setMinWidth(130);
+        saveBtn.setMinWidth(80);
+        resetBtn.setMinWidth(80);
+        showAllBtn.setMinWidth(90);
+        viewDatasetBtn.setMinWidth(100);
+        
+        searchBtn.setMinWidth(100);
+        deleteBtn.setMinWidth(100);
+        updateBtn.setMinWidth(100);
+
+        for (Button btn : new Button[]{calculateBtn, saveBtn, resetBtn, showAllBtn, viewDatasetBtn, 
+                                     searchBtn, deleteBtn, updateBtn}) {
+            btn.setStyle(buttonStyle);
+            btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+            btn.setOnMouseExited(e -> btn.setStyle(buttonStyle));
+        }
 
         idField = new TextField();
         idField.setPromptText("Enter ID");
@@ -100,39 +124,69 @@ public class EmployeeSalaryGUI extends Application {
         inputGrid.setVgap(10);
         inputGrid.setAlignment(Pos.CENTER);
 
+     // Add column constraints with reduced widths
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPrefWidth(100);  // Reduced from 30% to fixed 100px
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPrefWidth(150);  // Reduced middle column
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setPrefWidth(150);  // Reduced right column
+        inputGrid.getColumnConstraints().addAll(col1, col2, col3);
+
+        // Add components to grid with proper alignment
         inputGrid.add(typeLabel, 0, 0);
+        GridPane.setHalignment(typeLabel, HPos.RIGHT);  // Right-align labels
         inputGrid.add(managerRadio, 1, 0);
         inputGrid.add(engineerRadio, 2, 0);
 
         inputGrid.add(nameLabel, 0, 1);
+        GridPane.setHalignment(nameLabel, HPos.RIGHT);
+        nameField.setPrefWidth(200);  // Set fixed width for text fields
         inputGrid.add(nameField, 1, 1, 2, 1);
 
         inputGrid.add(deptLabel, 0, 2);
+        GridPane.setHalignment(deptLabel, HPos.RIGHT);
+        deptCombo.setPrefWidth(200);
         inputGrid.add(deptCombo, 1, 2, 2, 1);
 
         inputGrid.add(salaryLabel, 0, 3);
+        GridPane.setHalignment(salaryLabel, HPos.RIGHT);
+        salaryField.setPrefWidth(200);
         inputGrid.add(salaryField, 1, 3, 2, 1);
 
         inputGrid.add(extraLabel, 0, 4);
+        GridPane.setHalignment(extraLabel, HPos.RIGHT);
+        extraField.setPrefWidth(200);
         inputGrid.add(extraField, 1, 4, 2, 1);
-
-        HBox actions = new HBox(10, calculateBtn, saveBtn, resetBtn, showAllBtn, viewDatasetBtn);
+        
+        // Action buttons HBox with improved layout
+        HBox actions = new HBox(8, calculateBtn, saveBtn, resetBtn, showAllBtn, viewDatasetBtn);
         actions.setAlignment(Pos.CENTER);
+        actions.setPadding(new Insets(5, 0, 5, 0)); // Vertical padding
         inputGrid.add(actions, 0, 5, 3, 1);
 
+        // ID operations HBox
         inputGrid.add(new Label("Employee ID:"), 0, 6);
         inputGrid.add(idField, 1, 6);
-        HBox idOps = new HBox(10, searchBtn, deleteBtn, updateBtn);
+        HBox idOps = new HBox(8, searchBtn, deleteBtn, updateBtn);
         idOps.setAlignment(Pos.CENTER);
+        idOps.setPadding(new Insets(5, 0, 5, 0)); // Vertical padding
         inputGrid.add(idOps, 1, 7, 2, 1);
 
         // Main layout
         VBox root = new VBox(15, inputGrid, resultArea);
         root.setPadding(new Insets(15));
         root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: #d4ebff;");
+        root.setStyle("""
+            -fx-background-color: linear-gradient(
+                to bottom right,
+                #e0f2ff 0%,
+                #8bc8ff 50%,
+                #3a89ff 100%
+            );
+        """);
 
-        // Event handlers
+        // ========== EVENT HANDLERS ==========
         group.selectedToggleProperty().addListener((obs, o, n) -> {
             extraLabel.setText(managerRadio.isSelected() ? "Bonus:" : "Overtime Hours:");
         });
@@ -170,15 +224,13 @@ public class EmployeeSalaryGUI extends Application {
         });
 
         resetBtn.setOnAction(e -> resetForm());
-
         showAllBtn.setOnAction(e -> showAllEmployees());
-
         viewDatasetBtn.setOnAction(e -> showDatasetFile());
+        // ========== END EVENT HANDLERS ==========
 
-        stage.setScene(new Scene(root, 800, 650));
+        stage.setScene(new Scene(root, 850, 700));
         stage.show();
     }
-
     private void initializeDataFile() {
         File file = new File(EmployeeStorageUtil.FILE);
         if (!file.exists()) {
