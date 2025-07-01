@@ -74,3 +74,66 @@ Add charts or PDF report export
 Optionally connect with MySQL or PostgreSQL
 
 More advanced search and filter options
+
+-------------------------------------------------------------------------------------------------------------------
+📄 Inno Setup Script for jar to exe execution
+
+Use the following .iss script to create the EXE installer. Save it as EmployeeSalaryMS.iss and open it in Inno Setup Compiler:
+
+<details> <summary>Click to view full script</summary>
+
+
+
+; -- EmployeeSalaryMS.iss --
+; Installer Script for JavaFX Application (JAR to EXE)
+
+[Setup]
+AppName=Employee Salary Management System
+AppVersion=1.0.0
+AppPublisher=Your Company Name
+AppPublisherURL=https://www.yourcompany.com/
+AppSupportURL=https://www.yourcompany.com/support
+AppUpdatesURL=https://www.yourcompany.com/updates
+DefaultDirName={autopf}\EmployeeSalaryMS
+DefaultGroupName=Employee Salary Management
+OutputDir=output
+OutputBaseFilename=EmployeeSalaryMS_Setup
+Compression=lzma
+SolidCompression=yes
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
+
+[Files]
+Source: "Employee Salary Management System.jar"; DestDir: "{app}"; Flags: ignoreversion
+Source: "lib\*"; DestDir: "{app}\lib"; Flags: recursesubdirs ignoreversion
+Source: "jre\*"; DestDir: "{app}\jre"; Flags: recursesubdirs ignoreversion
+
+[Icons]
+Name: "{group}\Employee Salary Management System";
+Filename: "{app}\jre\bin\javaw.exe";
+Parameters: "--module-path ""{app}\lib"" --add-modules javafx.controls,javafx.fxml -jar ""{app}\Employee Salary Management System.jar""";
+WorkingDir: "{app}";
+IconFilename: "{app}\appicon.ico"
+
+Name: "{commondesktop}\Employee Salary Management System";
+Filename: "{app}\jre\bin\javaw.exe";
+Parameters: "--module-path ""{app}\lib"" --add-modules javafx.controls,javafx.fxml -jar ""{app}\Employee Salary Management System.jar""";
+WorkingDir: "{app}";
+IconFilename: "{app}\appicon.ico";
+Tasks: desktopicon
+
+[Tasks]
+Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"; Flags: unchecked
+
+[Run]
+Filename: "{app}\jre\bin\javaw.exe";
+Parameters: "--module-path ""{app}\lib"" --add-modules javafx.controls,javafx.fxml -jar ""{app}\Employee Salary Management System.jar""";
+Description: "Launch Employee Salary Management System";
+WorkingDir: "{app}";
+Flags: nowait postinstall skipifsilent
+
+[Code]
+function InitializeSetup(): Boolean;
+begin
+  Result := True; // Default to allow installation
+end;
