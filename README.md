@@ -90,10 +90,10 @@ Use the following .iss script to create the EXE installer. Save it as EmployeeSa
 [Setup]
 AppName=Employee Salary Management System
 AppVersion=1.0.0
-AppPublisher=Your Company Name
-AppPublisherURL=https://www.yourcompany.com/
-AppSupportURL=https://www.yourcompany.com/support
-AppUpdatesURL=https://www.yourcompany.com/updates
+AppPublisher=Elangovan Software Solutions
+AppPublisherURL=https://elangovan.dev/
+AppSupportURL=https://elangovan.dev/support
+AppUpdatesURL=https://elangovan.dev/updates
 DefaultDirName={autopf}\EmployeeSalaryMS
 DefaultGroupName=Employee Salary Management
 OutputDir=output
